@@ -85,6 +85,13 @@ void DesktopMultiWindowPlugin::HandleMethodCall(
     MultiWindowManager::Instance()->Center(window_id);
     result->Success();
     return;
+  } else if (method_call.method_name() == "setFullscreen") {
+    auto *arguments = std::get_if<flutter::EncodableMap>(method_call.arguments());
+    auto window_id = arguments->at(flutter::EncodableValue("windowId")).LongValue();
+    auto enabled = std::get<bool>(arguments->at(flutter::EncodableValue("enabled")));
+    MultiWindowManager::Instance()->SetFullscreen(window_id, enabled);
+    result->Success();
+    return;
   } else if (method_call.method_name() == "setTitle") {
     auto *arguments = std::get_if<flutter::EncodableMap>(method_call.arguments());
     auto window_id = arguments->at(flutter::EncodableValue("windowId")).LongValue();

@@ -129,14 +129,21 @@ void MultiWindowManager::Center(int64_t id) {
   }
 }
 
-flutter::EncodableList MultiWindowManager::GetAllSubWindowIds() {
-  flutter::EncodableList resList = flutter::EncodableList();
+void MultiWindowManager::SetFullscreen(int64_t id, bool enabled) {
+  auto window = windows_.find(id);
+  if (window != windows_.end()) {
+    window->second->SetFullscreen(enabled);
+  }
+}
+
+std::vector<int64_t> MultiWindowManager::GetAllSubWindowIds() {
+  std::vector<int64_t> ids;
   for (auto &window : windows_) {
     if (window.first != 0) {
-      resList.push_back(flutter::EncodableValue(window.first));
+      ids.push_back(window.first);
     }
   }
-  return resList;
+  return ids;
 }
 
 void MultiWindowManager::OnWindowClose(int64_t id) {

@@ -5,6 +5,11 @@
 #include "base_flutter_window.h"
 
 namespace {
+enum class Style : DWORD {
+    windowed      = WS_OVERLAPPEDWINDOW | WS_THICKFRAME | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
+    borderless    = WS_POPUP            | WS_THICKFRAME              | WS_SYSMENU | WS_MAXIMIZEBOX | WS_MINIMIZEBOX
+};
+
 void CenterRectToMonitor(LPRECT prc) {
   HMONITOR hMonitor;
   MONITORINFO mi;
@@ -56,6 +61,21 @@ void BaseFlutterWindow::Center() {
   GetWindowRect(handle, &rc);
   CenterRectToMonitor(&rc);
   SetWindowPos(handle, nullptr, rc.left, rc.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+}
+
+void BaseFlutterWindow::SetFullscreen(bool enabled) {
+  auto handle = GetWindowHandle();
+  if (!handle) {
+    return;
+  }
+  Style newStyle = enabled ? Style::borderless : Style::windowed;
+  SetWindowLongPtrW(handle, GWL_STYLE, static_cast<LONG>(newStyle));
+
+  if(enabled) {
+    ShowWindow(handle, SW_MAXIMIZE);
+  } else {
+    ShowWindow(handle, SW_SHOWMINIMIZED);
+  }
 }
 
 void BaseFlutterWindow::SetBounds(double_t x, double_t y, double_t width, double_t height) {

@@ -38,6 +38,14 @@ class WindowControllerMainImpl extends WindowController {
   }
 
   @override
+  Future<void> setFullscreen(bool enabled) {
+    return _channel.invokeMethod('setFullscreen', <String, dynamic>{
+      'windowId': _id,
+      'enabled': enabled,
+    });
+  }
+
+  @override
   Future<void> setFrame(Rect frame) {
     return _channel.invokeMethod('setFrame', <String, dynamic>{
       'windowId': _id,

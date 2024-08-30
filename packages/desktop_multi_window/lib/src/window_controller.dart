@@ -33,6 +33,9 @@ abstract class WindowController {
   /// Center the window on the screen.
   Future<void> center();
 
+  /// Set window as fullscreen.
+  Future<void> setFullscreen(bool enabled);
+
   /// Set the window's title.
   Future<void> setTitle(String title);
 
